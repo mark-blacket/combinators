@@ -4,6 +4,9 @@ synopsis: "Small generic parser combinator library"
 depends: [
   "ocaml"
   "dune" {>= "3.14"}
+  "ounit2" {with-test}
+  "ppx_import" {with_test}
+  "ppx_deriving" {with_test}
   "odoc" {with-doc}
 ]
 build: [

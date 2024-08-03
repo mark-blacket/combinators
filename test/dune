@@ -1,0 +1,4 @@
+(test
+  (preprocess (pps ppx_deriving.show))
+  (libraries combinators ounit2)
+  (name test))

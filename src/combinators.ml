@@ -45,9 +45,9 @@ module type S = sig
     val take_until : (elt -> bool) -> input t
 
     module O : sig
+        val ( >>| ) : 'a t -> input -> input * ('a, error) result
         val ( >>= ) : 'a t -> ('a -> 'b t) -> 'b t
         val ( >>$ ) : 'a t -> ('a -> 'b) -> 'b t
-        val ( >>| ) : 'a t -> input -> input * ('a, error) result
         val ( >>* ) : input t -> 'a t -> 'a t
         val ( <*  ) : 'a t -> 'b t -> 'a t
         val (  *> ) : 'a t -> 'b t -> 'b t
@@ -165,8 +165,8 @@ with type input = In.t and type elt = In.elt = struct
             try let c = In.get inp 0 in
                 if f c
                 then (return c).run (In.drop 1 inp)
-                else (fail "").run inp
-            with Invalid_argument _ -> (fail "").run inp }
+                else (fail "Element not matched").run inp
+            with Invalid_argument _ -> (fail "Empty string").run inp }
 
     let elt c = elt_if (fun x -> x = c)
 
@@ -174,15 +174,15 @@ with type input = In.t and type elt = In.elt = struct
         { run = fun inp ->
             match In.drop_match s inp with
                 | Some s' -> (return s).run s' 
-                | None -> (fail "").run inp }
+                | None -> (fail "Input not matched").run inp }
 
     let take_all = { run = fun inp -> In.empty, Ok inp }
     let take_while f = map (elt_if f |> repeat1) In.join
     let take_until f = take_while (fun x -> not (f x))
 
     module O = struct
-        let ( >>= ) = bind
         let ( >>| ) = apply
+        let ( >>= ) = bind
         let ( >>$ ) = map
         let ( >>* ) = forward
         let ( <*  ) = left
