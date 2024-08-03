@@ -146,7 +146,7 @@ with type input = In.t and type elt = In.elt = struct
                 | inp', Ok x -> 
                     let inp'', res = (repeat0 p).run inp'
                         in (inp'', Ok (x :: Result.get_ok res))
-                | _, Error _ as e -> e }
+                | _, Error _ -> inp, Error "No matches" }
 
     let foreach p q =
         { run = fun inp ->
