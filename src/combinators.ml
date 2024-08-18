@@ -57,7 +57,8 @@ module type S = sig
     end
 end
 
-module Make (In : Input) : S 
+
+module Make (In : Input) : S
 with type input = In.t and type elt = In.elt = struct
     type error = string
     type input = In.t
@@ -194,3 +195,4 @@ with type input = In.t and type elt = In.elt = struct
 end
 
 module String = String
+module Bytes = Bytes
